@@ -26,7 +26,17 @@ public class Language implements Comparable<Language>, Serializable {
 	private String description;
 	private String suppresedScript;
 
-	private static Collator collator;
+	private static final Collator collator;
+
+	static {
+		Locale locale = Locale.getDefault();
+		String resource = "extendedLanguageList_" + locale.getLanguage() + ".xml";
+		if (Language.class.getResourceAsStream(resource) == null) {
+			collator = Collator.getInstance(locale);
+		} else {
+			collator = Collator.getInstance(Locale.forLanguageTag("en"));
+		}
+	}
 
 	public Language(String code, String description) {
 		this.code = code;
@@ -57,15 +67,6 @@ public class Language implements Comparable<Language>, Serializable {
 
 	@Override
 	public int compareTo(Language arg0) {
-		if (collator == null) {
-			Locale locale = Locale.getDefault();
-			String resource = "extendedLanguageList_" + locale.getLanguage() + ".xml";
-			if (Language.class.getResourceAsStream(resource) == null) {
-				collator = Collator.getInstance(locale);
-			} else {
-				collator = Collator.getInstance( Locale.forLanguageTag("en"));
-			}			
-		}
 		return collator.compare(description, arg0.getDescription());
 	}
 

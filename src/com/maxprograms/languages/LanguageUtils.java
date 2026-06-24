@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.Collator;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -31,9 +31,9 @@ import com.maxprograms.xml.SAXBuilder;
 
 public class LanguageUtils {
 
-	private static final Map<String, LanguageBundle> EXTENDED_LANGUAGE_CACHE = new HashMap<>();
-	private static final Map<String, List<Language>> COMMON_LANGUAGE_CACHE = new HashMap<>();
-	private static RegistryParser registry;
+	private static final Map<String, LanguageBundle> EXTENDED_LANGUAGE_CACHE = new Hashtable<>();
+	private static final Map<String, List<Language>> COMMON_LANGUAGE_CACHE = new Hashtable<>();
+	private static volatile RegistryParser registry;
 
 	private LanguageUtils() {
 		// do not instantiate
@@ -80,7 +80,11 @@ public class LanguageUtils {
 			}
 		}
 		if (registry == null) {
-			registry = new RegistryParser(LanguageUtils.class.getResource("language-subtag-registry.txt"));
+			synchronized (LanguageUtils.class) {
+				if (registry == null) {
+					registry = new RegistryParser(LanguageUtils.class.getResource("language-subtag-registry.txt"));
+				}
+			}
 		}
 		String description = registry.getTagDescription(code);
 		if (description != null) {
@@ -104,7 +108,11 @@ public class LanguageUtils {
 
 	public static String normalizeCode(String code) throws IOException {
 		if (registry == null) {
-			registry = new RegistryParser(LanguageUtils.class.getResource("language-subtag-registry.txt"));
+			synchronized (LanguageUtils.class) {
+				if (registry == null) {
+					registry = new RegistryParser(LanguageUtils.class.getResource("language-subtag-registry.txt"));
+				}
+			}
 		}
 		return registry.normalizeCode(code);
 	}
