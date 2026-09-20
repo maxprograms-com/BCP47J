@@ -344,6 +344,27 @@ public class RegistryParser {
 						return langDesc + " (" + regDesc + ")";
 					}
 				}
+				if (!isPrivateLang) {
+					Variant variant = variants.get(parts[2].toLowerCase());
+					if (variant != null) {
+						String fullPrefix = parts[0].toLowerCase() + "-" + parts[1].toLowerCase();
+						String prefix = variant.getPrefix();
+						if (prefix != null && prefix.indexOf('|') != -1) {
+							String[] prefixes = prefix.split("\\|");
+							for (String p : prefixes) {
+								p = p.trim();
+								if (p.equals(fullPrefix)) {
+									// variant is valid for the preceding variant
+									return langDesc + " (" + variant.getDescription() + ")";
+								}
+							}
+						}
+						if (prefix != null && prefix.equals(fullPrefix)) {
+							// variant is valid for the preceding variant
+							return langDesc + " (" + variant.getDescription() + ")";
+						}
+					}
+				}
 			}
 		}
 		return "";

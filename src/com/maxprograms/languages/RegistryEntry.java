@@ -24,9 +24,22 @@ public class RegistryEntry {
 
 	private void parseEntry(String entry) {
 		String[] lines = entry.split("\n");
+		String lastType = null;
 		for (int i = 0; i < lines.length; i++) {
-			String type = lines[i].substring(0, lines[i].indexOf(':')).trim();
-			String value = lines[i].substring(lines[i].indexOf(':') + 1).trim();
+			String line = lines[i];
+			if (line.startsWith(" ") || line.startsWith("\t")) {
+				if (lastType != null) {
+					table.put(lastType, table.get(lastType) + " " + line.trim());
+				}
+				continue;
+			}
+			int separator = line.indexOf(':');
+			if (separator == -1) {
+				continue;
+			}
+			String type = line.substring(0, separator).trim();
+			String value = line.substring(separator + 1).trim();
+			lastType = type;
 			if (!table.containsKey(type)) {
 				table.put(type, value);
 			} else {
