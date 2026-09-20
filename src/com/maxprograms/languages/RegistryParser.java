@@ -238,9 +238,22 @@ public class RegistryParser {
 			// try with a variant
 			if (!isPrivateLang && variants.containsKey(parts[1].toLowerCase())) {
 				Variant variant = variants.get(parts[1].toLowerCase());
-				if (variant != null && variant.getPrefix().equals(parts[0].toLowerCase())) {
-					// variant is valid for the language code
-					return langDesc + " (" + variant.getDescription() + ")";
+				if (variant != null) {
+					String prefix = variant.getPrefix();
+					if (prefix != null && prefix.indexOf('|') != -1) {
+						String[] prefixes = prefix.split("\\|");
+						for (String p : prefixes) {
+							p = p.trim();
+							if (p.equals(parts[0].toLowerCase())) {
+								// variant is valid for the language code
+								return langDesc + " (" + variant.getDescription() + ")";
+							}
+						}
+					}
+					if (prefix != null && prefix.equals(parts[0].toLowerCase())) {
+						// variant is valid for the language code
+						return langDesc + " (" + variant.getDescription() + ")";
+					}
 				}
 			}
 			if (isPrivateLang) {
@@ -273,10 +286,25 @@ public class RegistryParser {
 					}
 					if (!isPrivateLang && variants.containsKey(parts[2].toLowerCase())) {
 						Variant variant = variants.get(parts[2].toLowerCase());
-						if (variant != null && variant.getPrefix().equals(parts[0].toLowerCase())) {
-							// variant is valid for the language code
-							return langDesc + " (" + scrDesc + ", " + variant.getDescription()
-									+ ")";
+						if (variant != null) {
+							String fullPrefix = parts[0].toLowerCase() + "-" + script;
+							String prefix = variant.getPrefix();
+							if (prefix != null && prefix.indexOf('|') != -1) {
+								String[] prefixes = prefix.split("\\|");
+								for (String p : prefixes) {
+									p = p.trim();
+									if (p.equals(fullPrefix)) {
+										// variant is valid for the language code
+										return langDesc + " (" + scrDesc + ", " + variant.getDescription()
+												+ ")";
+									}
+								}
+							}
+							if (prefix != null && prefix.equals(parts[0].toLowerCase())) {
+								// variant is valid for the language code
+								return langDesc + " (" + scrDesc + ", " + variant.getDescription()
+										+ ")";
+							}
 						}
 					}
 				}
@@ -290,10 +318,25 @@ public class RegistryParser {
 							: regions.get(parts[1].toUpperCase()).getDescription();
 					if (!isPrivateLang && variants.containsKey(parts[2].toLowerCase())) {
 						Variant variant = variants.get(parts[2].toLowerCase());
-						if (variant != null && variant.getPrefix().equals(parts[0].toLowerCase())) {
-							// variant is valid for the language code
-							return langDesc + " (" + regDesc + " - "
-									+ variant.getDescription() + ")";
+						if (variant != null) {
+							String fullPrefix = parts[0].toLowerCase() + "-" + parts[1].toUpperCase();
+							String prefix = variant.getPrefix();
+							if (prefix != null && prefix.indexOf('|') != -1) {
+								String[] prefixes = prefix.split("\\|");
+								for (String p : prefixes) {
+									p = p.trim();
+									if (p.equals(fullPrefix)) {
+										// variant is valid for the language code
+										return langDesc + " (" + regDesc + " - "
+												+ variant.getDescription() + ")";
+									}
+								}
+							}
+							if (prefix != null && prefix.equals(parts[0].toLowerCase())) {
+								// variant is valid for the language code
+								return langDesc + " (" + regDesc + " - "
+										+ variant.getDescription() + ")";
+							}
 						}
 					}
 					// For private-use languages with regions, return description
@@ -344,9 +387,22 @@ public class RegistryParser {
 			// try with a variant
 			if (!isPrivateLang && variants.containsKey(parts[1].toLowerCase())) {
 				Variant variant = variants.get(parts[1].toLowerCase());
-				if (variant != null && variant.getPrefix().equals(parts[0].toLowerCase())) {
-					// variant is valid for the language code
-					return parts[0].toLowerCase() + "-" + variant.getCode();
+				if (variant != null) {
+					String prefix = variant.getPrefix();
+					if (prefix != null && prefix.indexOf('|') != -1) {
+						String[] prefixes = prefix.split("\\|");
+						for (String p : prefixes) {
+							p = p.trim();
+							if (p.equals(parts[0].toLowerCase())) {
+								// variant is valid for the language code
+								return parts[0].toLowerCase() + "-" + variant.getCode();
+							}
+						}
+					}
+					if (prefix != null && prefix.equals(parts[0].toLowerCase())) {
+						// variant is valid for the language code
+						return parts[0].toLowerCase() + "-" + variant.getCode();
+					}
 				}
 			}
 		} else if (parts.length == 3) {
@@ -373,9 +429,23 @@ public class RegistryParser {
 					}
 					if (!isPrivateLang && variants.containsKey(parts[2].toLowerCase())) {
 						Variant variant = variants.get(parts[2].toLowerCase());
-						if (variant != null && variant.getPrefix().equals(parts[0].toLowerCase())) {
-							// variant is valid for the language code
-							return parts[0].toLowerCase() + "-" + scrCode + "-" + variant.getCode();
+						if (variant != null) {
+							String fullPrefix = parts[0].toLowerCase() + "-" + scrCode;
+							String prefix = variant.getPrefix();
+							if (prefix != null && prefix.indexOf('|') != -1) {
+								String[] prefixes = prefix.split("\\|");
+								for (String p : prefixes) {
+									p = p.trim();
+									if (p.equals(fullPrefix)) {
+										// variant is valid for the language code
+										return fullPrefix + "-" + variant.getCode();
+									}
+								}
+							}
+							if (prefix != null && prefix.equals(parts[0].toLowerCase())) {
+								// variant is valid for the language code
+								return fullPrefix + "-" + variant.getCode();
+							}
 						}
 					}
 				}
@@ -389,9 +459,23 @@ public class RegistryParser {
 							: regions.get(parts[1].toUpperCase()).getCode();
 					if (!isPrivateLang && variants.containsKey(parts[2].toLowerCase())) {
 						Variant variant = variants.get(parts[2].toLowerCase());
-						if (variant != null && variant.getPrefix().equals(parts[0].toLowerCase())) {
-							// variant is valid for the language code
-							return parts[0].toLowerCase() + "-" + regCode + "-" + variant.getCode();
+						if (variant != null) {
+							String fullPrefix = parts[0].toLowerCase() + "-" + regCode;
+							String prefix = variant.getPrefix();
+							if (prefix != null && prefix.indexOf('|') != -1) {
+								String[] prefixes = prefix.split("\\|");
+								for (String p : prefixes) {
+									p = p.trim();
+									if (p.equals(fullPrefix)) {
+										// variant is valid for the language code
+										return fullPrefix + "-" + variant.getCode();
+									}
+								}
+							}
+							if (prefix != null && prefix.equals(parts[0].toLowerCase())) {
+								// variant is valid for the language code
+								return fullPrefix + "-" + variant.getCode();
+							}
 						}
 					}
 					// For private-use languages with regions, return normalized code
@@ -399,9 +483,28 @@ public class RegistryParser {
 						return parts[0].toLowerCase() + "-" + regCode;
 					}
 				}
+				// try with a variant
+				Variant variant = variants.get(parts[2].toLowerCase());
+				if (variant != null) {
+					String fullPrefix = parts[0].toLowerCase() + "-" + parts[1].toLowerCase();
+					String prefix = variant.getPrefix();
+					if (prefix != null && prefix.indexOf('|') != -1) {
+						String[] prefixes = prefix.split("\\|");
+						for (String p : prefixes) {
+							p = p.trim();
+							if (p.equals(parts[0].toLowerCase())) {
+								// variant is valid for the language code
+								return fullPrefix + "-" + variant.getCode();
+							}
+						}
+					}
+					if (prefix != null && prefix.equals(fullPrefix)) {
+						// variant is valid for the language code
+						return fullPrefix + "-" + variant.getCode();
+					}
+				}
 			}
 		}
 		return "";
 	}
-
 }
